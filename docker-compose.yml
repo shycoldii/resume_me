@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: "postgres:14.5-alpine"
+    container_name: db
+    restart: always
+    ports:
+      - 5433:5432 # Из внешней по первому
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=resume_builder
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+
+  resume_builder:
+    build: ./ #Dockerfile
+    container_name: resume_builder
+    environment:
+      - DB_SERVER:db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/resume_builder
+    ports:
+      - 8081:8080 # Из внешней по первому
+    depends_on:
+      - db
+volumes:
+  postgres_data:
