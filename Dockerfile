@@ -1,5 +1,6 @@
 #frontend
-FROM node as frontend
+FROM node:16.15.0-alpine as frontend
+RUN npm install -g npm@9.6.0
 WORKDIR /frontend
 COPY frontend .
 RUN npm ci
